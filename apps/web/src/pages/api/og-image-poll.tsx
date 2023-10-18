@@ -1,12 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
-import { z } from "zod";
 
-const schema = z.object({
-  title: z.string().min(1),
-  author: z.string().min(1),
-});
+const schema = {
+  parse: ({
+    title,
+    author,
+  }: {
+    title: string | null;
+    author: string | null;
+  }) => {
+    if (!title || !author) {
+      throw new Error("Missing title or author");
+    }
+    if (typeof title !== "string" || typeof author !== "string") {
+      throw new Error("Invalid title or author");
+    }
+    return { title, author };
+  },
+};
 
 export const config = {
   runtime: "edge",
