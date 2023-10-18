@@ -1,35 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
+import { z } from "zod";
 
-const schema = {
-  parse: ({
-    title,
-    author,
-  }: {
-    title: string | null;
-    author: string | null;
-  }) => {
-    if (!title || !author) {
-      throw new Error("Missing title or author");
-    }
-    if (typeof title !== "string" || typeof author !== "string") {
-      throw new Error("Invalid title or author");
-    }
-    return { title, author };
-  },
-};
+const schema = z.object({
+  title: z.string().min(1),
+  author: z.string().min(1),
+});
 
 export const config = {
   runtime: "edge",
 };
 
 const regularFont = fetch(
-  new URL("/public/static/fonts/inter-regular.ttf", import.meta.url),
+  new URL(
+    "http://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf",
+  ),
 ).then((res) => res.arrayBuffer());
 
 const boldFont = fetch(
-  new URL("/public/static/fonts/inter-bold.ttf", import.meta.url),
+  new URL(
+    "http://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYMZhrib2Bg-4.ttf",
+  ),
 ).then((res) => res.arrayBuffer());
 
 export default async function handler(req: NextRequest) {
